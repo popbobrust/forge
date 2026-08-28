@@ -6,296 +6,43 @@
   <title>♭·io · sheet music composer</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    body {
-      background: #f5f7fb;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .flat-card {
-      max-width: 1100px;
-      width: 100%;
-      background: white;
-      border-radius: 32px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
-      padding: 30px 35px 40px;
-      transition: all 0.2s ease;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .logo-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-icon {
-      background: #1e2b3c;
-      color: white;
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      font-weight: 600;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
-    }
-
-    .logo-text {
-      font-size: 24px;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-      color: #1e2b3c;
-    }
-
-    .logo-text span {
-      color: #6c7a8a;
-      font-weight: 400;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn {
-      background: transparent;
-      border: 1px solid #e2e8f0;
-      padding: 10px 18px;
-      border-radius: 40px;
-      font-weight: 500;
-      font-size: 14px;
-      color: #1e2b3c;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.15s;
-      background: white;
-    }
-
-    .btn-primary {
-      background: #1e2b3c;
-      border: 1px solid #1e2b3c;
-      color: white;
-    }
-
-    .btn-primary i {
-      color: white;
-    }
-
-    .btn:hover {
-      background: #f1f4f9;
-      border-color: #cbd5e1;
-    }
-
-    .btn-primary:hover {
-      background: #2c3d52;
-      border-color: #2c3d52;
-    }
-
-    .score-container {
-      background: #ffffff;
-      border-radius: 24px;
-      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02), 0 4px 16px rgba(0,0,0,0.02);
-      padding: 20px 10px 10px 10px;
-      margin-bottom: 20px;
-      border: 1px solid #edf2f7;
-      position: relative;
-      user-select: none;
-    }
-
-    #musicCanvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      background: white;
-      border-radius: 16px;
-      cursor: pointer;
-      touch-action: none;
-    }
-
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px 14px;
-      margin: 18px 0 12px 0;
-      padding: 6px 4px;
-      border-top: 1px solid #ecf1f7;
-      border-bottom: 1px solid #ecf1f7;
-      padding: 14px 0;
-    }
-
-    .tool-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .tool-group-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: #5e6f7e;
-      letter-spacing: 0.3px;
-      margin-right: 4px;
-    }
-
-    .tool-btn {
-      background: transparent;
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: #1f2a36;
-      background: white;
-      border: 1px solid transparent;
-      transition: 0.1s;
-      cursor: pointer;
-    }
-
-    .tool-btn i {
-      font-size: 18px;
-      color: #2c3d4f;
-    }
-
-    .tool-btn.active {
-      background: #eef3fa;
-      border-color: #cbdae9;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
-    }
-
-    .tool-btn:hover {
-      background: #f0f4fc;
-      border-color: #d0ddee;
-    }
-
-    .separator {
-      width: 1px;
-      height: 28px;
-      background: #e2eaf3;
-      margin: 0 6px;
-    }
-
-    .playback-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 20px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .play-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .play-btn {
-      background: #1e2b3c;
-      border: none;
-      color: white;
-      width: 48px;
-      height: 48px;
-      border-radius: 40px;
-      font-size: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.15s;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-    }
-
-    .play-btn:hover {
-      background: #2d3f53;
-      transform: scale(1.02);
-    }
-
-    .status {
-      color: #4b5e6f;
-      font-size: 14px;
-      font-weight: 450;
-      background: #f0f5fc;
-      padding: 6px 18px;
-      border-radius: 40px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .status i {
-      color: #3b7c5c;
-    }
-
-    .clear-btn {
-      background: transparent;
-      border: 1px solid #e2e8f0;
-      padding: 8px 18px;
-      border-radius: 40px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #4d6072;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-
-    .clear-btn:hover {
-      background: #f8faff;
-      border-color: #bcccdb;
-    }
-
-    @media (max-width: 680px) {
-      .flat-card {
-        padding: 20px;
-      }
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .action-buttons {
-        width: 100%;
-        justify-content: flex-start;
-      }
-      .toolbar {
-        gap: 12px;
-      }
-    }
-
-    .note-badge {
-      background: #eaf1fb;
-      border-radius: 30px;
-      padding: 4px 14px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #1e2b3c;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+    body { background: #f0f2f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .flat-card { max-width: 1200px; width: 100%; background: white; border-radius: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.08); padding: 30px 35px 40px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { background: #1e2b3c; color: white; width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 600; }
+    .logo-text { font-size: 24px; font-weight: 600; letter-spacing: -0.3px; color: #1e2b3c; }
+    .logo-text span { color: #6c7a8a; font-weight: 400; }
+    .action-buttons { display: flex; gap: 10px; }
+    .btn { background: transparent; border: 1px solid #e2e8f0; padding: 10px 18px; border-radius: 40px; font-weight: 500; font-size: 14px; color: #1e2b3c; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.15s; background: white; }
+    .btn-primary { background: #1e2b3c; border: 1px solid #1e2b3c; color: white; }
+    .btn-primary i { color: white; }
+    .btn:hover { background: #f1f4f9; border-color: #cbd5e1; }
+    .btn-primary:hover { background: #2c3d52; border-color: #2c3d52; }
+    .score-container { background: #ffffff; border-radius: 24px; padding: 20px 10px 10px 10px; margin-bottom: 20px; border: 1px solid #edf2f7; position: relative; user-select: none; }
+    #musicCanvas { display: block; width: 100%; height: auto; background: white; border-radius: 16px; cursor: pointer; touch-action: none; }
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 18px 0 12px 0; padding: 14px 0; border-top: 1px solid #ecf1f7; border-bottom: 1px solid #ecf1f7; }
+    .tool-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .tool-group-label { font-size: 12px; font-weight: 600; color: #5e6f7e; letter-spacing: 0.3px; margin-right: 4px; }
+    .tool-btn { background: transparent; border: none; width: 36px; height: 36px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-size: 18px; color: #1f2a36; background: white; border: 1px solid transparent; transition: 0.1s; cursor: pointer; }
+    .tool-btn i { font-size: 18px; color: #2c3d4f; }
+    .tool-btn.active { background: #eef3fa; border-color: #cbdae9; box-shadow: 0 1px 4px rgba(0,0,0,0.02); }
+    .tool-btn:hover { background: #f0f4fc; border-color: #d0ddee; }
+    .separator { width: 1px; height: 28px; background: #e2eaf3; margin: 0 6px; }
+    .playback-bar { display: flex; align-items: center; justify-content: space-between; margin-top: 20px; flex-wrap: wrap; gap: 16px; }
+    .play-controls { display: flex; align-items: center; gap: 12px; }
+    .play-btn { background: #1e2b3c; border: none; color: white; width: 48px; height: 48px; border-radius: 40px; font-size: 20px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.15s; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+    .play-btn:hover { background: #2d3f53; transform: scale(1.02); }
+    .status { color: #4b5e6f; font-size: 14px; font-weight: 450; background: #f0f5fc; padding: 6px 18px; border-radius: 40px; display: inline-flex; align-items: center; gap: 8px; }
+    .status i { color: #3b7c5c; }
+    .clear-btn { background: transparent; border: 1px solid #e2e8f0; padding: 8px 18px; border-radius: 40px; font-size: 13px; font-weight: 500; color: #4d6072; cursor: pointer; transition: 0.1s; }
+    .clear-btn:hover { background: #f8faff; border-color: #bcccdb; }
+    .shortcut-hint { font-size: 11px; color: #8a9aa8; margin-left: 4px; font-weight: 400; }
+    @media (max-width: 680px) { .flat-card { padding: 20px; } .header { flex-direction: column; align-items: flex-start; } .action-buttons { width: 100%; justify-content: flex-start; } .toolbar { gap: 12px; } }
+    .note-badge { background: #eaf1fb; border-radius: 30px; padding: 4px 14px; font-size: 13px; font-weight: 500; color: #1e2b3c; }
+    .articulation-btn { font-size: 16px; font-weight: 600; width: 40px; }
+    .selected-indicator { background: #d4e2f8; border-radius: 4px; padding: 2px 10px; font-size: 12px; color: #1e3a6b; }
   </style>
 </head>
 <body>
@@ -313,15 +60,17 @@
   </div>
 
   <div class="score-container">
-    <canvas id="musicCanvas" width="1000" height="200"></canvas>
+    <canvas id="musicCanvas" width="1200" height="220"></canvas>
   </div>
 
   <div class="toolbar">
     <div class="tool-group">
-      <span class="tool-group-label"><i class="fas fa-music"></i> Duration</span>
-      <button class="tool-btn active" id="durQuarter"><i class="fas fa-circle"></i></button>
-      <button class="tool-btn" id="durHalf"><i class="far fa-circle"></i></button>
-      <button class="tool-btn" id="durWhole"><i class="far fa-circle" style="border:2px solid #1f2a36; border-radius:50%; padding:2px;"></i></button>
+      <span class="tool-group-label"><i class="fas fa-music"></i> Durations</span>
+      <button class="tool-btn" id="durWhole"><i class="fas fa-circle"></i> <span class="shortcut-hint">1</span></button>
+      <button class="tool-btn" id="durHalf"><i class="far fa-circle"></i> <span class="shortcut-hint">2</span></button>
+      <button class="tool-btn active" id="durQuarter"><i class="fas fa-circle" style="font-size:14px;"></i> <span class="shortcut-hint">3</span></button>
+      <button class="tool-btn" id="durEighth"><i class="fas fa-circle" style="font-size:12px;"></i> <span class="shortcut-hint">4</span></button>
+      <button class="tool-btn" id="durSixteenth"><i class="fas fa-circle" style="font-size:10px;"></i> <span class="shortcut-hint">5</span></button>
     </div>
 
     <div class="separator"></div>
@@ -332,12 +81,28 @@
       <span class="note-badge" id="octaveDisplay">4</span>
       <button class="tool-btn" id="octaveUp"><i class="fas fa-plus"></i></button>
     </div>
+
+    <div class="separator"></div>
+
+    <div class="tool-group">
+      <span class="tool-group-label"><i class="fas fa-guitar"></i> Articulations</span>
+      <button class="tool-btn articulation-btn" id="artStaccato">· <span class="shortcut-hint">S</span></button>
+      <button class="tool-btn articulation-btn" id="artAccent">∧ <span class="shortcut-hint">A</span></button>
+      <button class="tool-btn articulation-btn" id="artTenuto">— <span class="shortcut-hint">T</span></button>
+      <button class="tool-btn" id="artNone"><i class="fas fa-undo"></i> <span class="shortcut-hint">N</span></button>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="tool-group">
+      <span class="selected-indicator" id="selectionInfo">⚡ 0 selected</span>
+    </div>
   </div>
 
   <div class="playback-bar">
     <div class="play-controls">
       <button class="play-btn" id="playBtn"><i class="fas fa-play"></i></button>
-      <span class="status"><i class="fas fa-check-circle"></i> <span id="noteCount">0</span> notes</span>
+      <span class="status"><i class="fas fa-check-circle"></i> <span id="noteCount">0</span> notes · <span id="measureCount">0</span> measures</span>
     </div>
     <div>
       <button class="clear-btn" id="clearBtn"><i class="fas fa-eraser"></i> Clear all</button>
@@ -350,148 +115,214 @@
     const canvas = document.getElementById('musicCanvas');
     const ctx = canvas.getContext('2d');
 
-    let notes = [];             // { pitch, octave, duration, x }
-    let currentOctave = 4;
+    // State
+    let notes = [];             // { pitch, octave, duration, x, articulation, selected }
     let currentDuration = 'quarter';
+    let currentOctave = 4;
+    let selectedNotes = new Set(); // indices of selected notes
+    let currentArticulation = null; // 'staccato', 'accent', 'tenuto'
 
+    // UI elements
     const octaveDisplay = document.getElementById('octaveDisplay');
     const noteCountSpan = document.getElementById('noteCount');
+    const measureCountSpan = document.getElementById('measureCount');
+    const selectionInfo = document.getElementById('selectionInfo');
 
-    const durQuarter = document.getElementById('durQuarter');
-    const durHalf = document.getElementById('durHalf');
     const durWhole = document.getElementById('durWhole');
+    const durHalf = document.getElementById('durHalf');
+    const durQuarter = document.getElementById('durQuarter');
+    const durEighth = document.getElementById('durEighth');
+    const durSixteenth = document.getElementById('durSixteenth');
 
-    // ----- helper: get pitch from mouse Y -----
+    const artStaccato = document.getElementById('artStaccato');
+    const artAccent = document.getElementById('artAccent');
+    const artTenuto = document.getElementById('artTenuto');
+    const artNone = document.getElementById('artNone');
+
+    // Constants
+    const MEASURE_WIDTH = 120;
+    const STAFF_START = 60;
+    const LINE_SPACING = 16;
+    const NOTE_SPACING = 28;
+
+    // ----- Helpers -----
     function getPitchFromY(y) {
-      // staff lines: startY = 60, spacing = 16, 5 lines
-      const startY = 60;
-      const lineSpacing = 16;
-      // map y to pitch: we consider the space between lines and lines.
-      // We'll map C4 to the space just below the first line (y = startY + lineSpacing/2)
-      // We'll define a mapping from y to pitch offset (0 = C4)
-      // We use a continuous mapping: each semitone step = lineSpacing/2 = 8px
-      const step = lineSpacing / 2; // 8px per semitone
-      // C4 is at y = startY + lineSpacing + 2 (approx middle of staff) 
-      // we set C4 at y = startY + lineSpacing + 2
-      const c4y = startY + lineSpacing + 2;
-      const offset = (c4y - y) / step; // positive = higher pitch
-      // round to nearest semitone, clamp
+      const step = LINE_SPACING / 2;
+      const c4y = STAFF_START + LINE_SPACING + 2;
+      const offset = (c4y - y) / step;
       let semitone = Math.round(offset);
-      // clamp to range C3 ( -12 ) to B6 ( +21 ) 
       semitone = Math.min(Math.max(semitone, -12), 21);
-      // map semitone to pitch name and octave
       const pitchNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-      // C4 = semitone 0
+      let idx = ((semitone % 12) + 12) % 12;
       let octave = 4 + Math.floor((semitone + 12) / 12) - 1;
-      let pitchIndex = ((semitone % 12) + 12) % 12;
-      let pitch = pitchNames[pitchIndex];
-      // adjust octave for wrap
-      if (pitchIndex < 0) pitchIndex += 12;
-      if (pitch === 'C' && semitone >= 0) octave = 4 + Math.floor((semitone + 12) / 12) - 1;
-      else if (pitch === 'C' && semitone < 0) octave = 4 + Math.floor((semitone + 12) / 12) - 1;
-      else {
-        octave = 4 + Math.floor((semitone + 12) / 12) - 1;
-      }
-      // ensure octave between 2 and 7
+      if (semitone < 0 && idx === 0) octave = 4 + Math.floor((semitone + 12) / 12) - 1;
+      if (semitone >= 0 && idx === 0) octave = 4 + Math.floor((semitone + 12) / 12) - 1;
       octave = Math.min(Math.max(octave, 2), 7);
-      return { pitch, octave };
+      return { pitch: pitchNames[idx], octave };
     }
 
-    // ----- drawing -----
+    function getYFromPitch(pitch, octave) {
+      const pitchOffsets = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
+      let semitone = pitchOffsets[pitch] + (octave - 4) * 12;
+      const c4y = STAFF_START + LINE_SPACING + 2;
+      return c4y - semitone * (LINE_SPACING/2);
+    }
+
+    function getMeasureIndex(x) {
+      return Math.floor((x - 30) / MEASURE_WIDTH);
+    }
+
+    function getXInMeasure(measureIndex, noteIndexInMeasure) {
+      return 30 + measureIndex * MEASURE_WIDTH + 20 + noteIndexInMeasure * NOTE_SPACING;
+    }
+
+    // ----- Drawing -----
     function drawScore() {
       const w = canvas.width;
       const h = canvas.height;
       ctx.clearRect(0, 0, w, h);
-
       ctx.fillStyle = '#fbfdff';
       ctx.fillRect(0, 0, w, h);
 
-      const lineSpacing = 16;
-      const startY = 60;
+      // Staff lines
       ctx.strokeStyle = '#2f3e4e';
       ctx.lineWidth = 1.5;
       for (let i = 0; i < 5; i++) {
-        const y = startY + i * lineSpacing;
+        const y = STAFF_START + i * LINE_SPACING;
         ctx.beginPath();
         ctx.moveTo(20, y);
         ctx.lineTo(w - 20, y);
         ctx.stroke();
       }
 
-      // treble clef
+      // Treble clef
       ctx.font = '44px "Times New Roman", serif';
       ctx.fillStyle = '#1f2a36';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('𝄞', 42, startY + 2 * lineSpacing + 2);
+      ctx.fillText('𝄞', 42, STAFF_START + 2 * LINE_SPACING + 2);
 
-      // draw notes
-      notes.forEach((note) => {
-        const pitch = note.pitch;
-        const octave = note.octave;
-        const dur = note.duration || 'quarter';
-        const x = note.x;
-
-        // map pitch+octave to y
-        const pitchOffsets = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
-        let semitone = pitchOffsets[pitch] + (octave - 4) * 12;
-        const step = 8; // px per semitone
-        const c4y = startY + lineSpacing + 2;
-        const yPos = c4y - semitone * step;
-
-        // draw notehead
+      // Measure lines & time signature
+      const numMeasures = Math.floor((w - 40) / MEASURE_WIDTH);
+      ctx.strokeStyle = '#8a9aa8';
+      ctx.lineWidth = 1.2;
+      for (let m = 1; m <= numMeasures; m++) {
+        const x = 30 + m * MEASURE_WIDTH;
         ctx.beginPath();
-        ctx.ellipse(x, yPos, 8, 6, 0, 0, Math.PI * 2);
-        ctx.fillStyle = '#1e2b3c';
+        ctx.moveTo(x, STAFF_START - 8);
+        ctx.lineTo(x, STAFF_START + 4 * LINE_SPACING + 8);
+        ctx.stroke();
+        // Measure number
+        ctx.font = '11px Inter, sans-serif';
+        ctx.fillStyle = '#8a9aa8';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(m, x, STAFF_START - 12);
+      }
+
+      // Draw notes grouped by measure
+      notes.forEach((note, index) => {
+        const x = note.x;
+        const y = getYFromPitch(note.pitch, note.octave);
+        const dur = note.duration || 'quarter';
+        const selected = selectedNotes.has(index);
+
+        // Notehead
+        ctx.beginPath();
+        ctx.ellipse(x, y, 8, 6, 0, 0, Math.PI * 2);
+        ctx.fillStyle = selected ? '#1e6bb8' : '#1e2b3c';
         ctx.fill();
-        ctx.strokeStyle = '#1e2b3c';
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = selected ? '#1e6bb8' : '#1e2b3c';
+        ctx.lineWidth = selected ? 2.5 : 1.2;
         ctx.stroke();
 
-        // stem
+        // Stem
         if (dur !== 'whole') {
           ctx.beginPath();
-          ctx.moveTo(x + 8, yPos - 2);
-          ctx.lineTo(x + 8, yPos - 32);
+          ctx.moveTo(x + 8, y - 2);
+          let stemLen = 32;
+          if (dur === 'eighth' || dur === 'sixteenth') stemLen = 40;
+          ctx.lineTo(x + 8, y - stemLen);
           ctx.stroke();
-          if (dur === 'quarter') {
+
+          // Flags
+          if (dur === 'eighth') {
             ctx.beginPath();
-            ctx.moveTo(x + 8, yPos - 32);
-            ctx.quadraticCurveTo(x + 20, yPos - 26, x + 16, yPos - 16);
+            ctx.moveTo(x + 8, y - stemLen);
+            ctx.quadraticCurveTo(x + 20, y - stemLen + 6, x + 16, y - stemLen + 16);
+            ctx.stroke();
+          } else if (dur === 'sixteenth') {
+            ctx.beginPath();
+            ctx.moveTo(x + 8, y - stemLen);
+            ctx.quadraticCurveTo(x + 20, y - stemLen + 6, x + 16, y - stemLen + 16);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x + 8, y - stemLen + 10);
+            ctx.quadraticCurveTo(x + 20, y - stemLen + 16, x + 16, y - stemLen + 26);
             ctx.stroke();
           }
         }
+
+        // Articulation
+        if (note.articulation) {
+          ctx.font = '18px "Times New Roman", serif';
+          ctx.fillStyle = '#c0392b';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          let artY = y - 36;
+          if (dur === 'whole') artY = y - 20;
+          if (note.articulation === 'staccato') {
+            ctx.fillText('·', x, artY - 4);
+          } else if (note.articulation === 'accent') {
+            ctx.fillText('∧', x, artY + 2);
+          } else if (note.articulation === 'tenuto') {
+            ctx.fillText('—', x, artY);
+          }
+        }
+
+        // Selection highlight
+        if (selected) {
+          ctx.strokeStyle = '#1e6bb8';
+          ctx.lineWidth = 1;
+          ctx.setLineDash([4, 4]);
+          ctx.strokeRect(x - 14, y - 30, 28, 36);
+          ctx.setLineDash([]);
+        }
       });
-    }
 
-    function updateNoteCount() {
+      // Update counters
       noteCountSpan.textContent = notes.length;
+      measureCountSpan.textContent = numMeasures;
+      selectionInfo.textContent = `⚡ ${selectedNotes.size} selected`;
     }
 
-    // ----- add note at mouse position -----
+    // ----- Add note at mouse -----
     function addNoteAtMouse(e) {
       const rect = canvas.getBoundingClientRect();
       const scaleX = canvas.width / rect.width;
       const scaleY = canvas.height / rect.height;
       const mouseX = (e.clientX - rect.left) * scaleX;
       const mouseY = (e.clientY - rect.top) * scaleY;
+      
       if (mouseX < 30 || mouseX > canvas.width - 30) return;
       
       const { pitch, octave } = getPitchFromY(mouseY);
-      // we ignore currentOctave, use computed octave from mouse
-      // but we respect the octave range
+      // Snap to measure
+      const measureIdx = getMeasureIndex(mouseX);
+      const notesInMeasure = notes.filter(n => getMeasureIndex(n.x) === measureIdx);
+      const x = 30 + measureIdx * MEASURE_WIDTH + 20 + notesInMeasure.length * NOTE_SPACING;
+      
       const newNote = {
-        pitch: pitch,
-        octave: octave,
+        pitch, octave,
         duration: currentDuration,
-        x: Math.min(Math.max(mouseX, 40), canvas.width - 40)
+        x: Math.min(x, 30 + (measureIdx+1) * MEASURE_WIDTH - 10),
+        articulation: currentArticulation,
       };
       notes.push(newNote);
-      updateNoteCount();
       drawScore();
     }
 
-    // ----- delete note at mouse position (right-click) -----
+    // ----- Delete note (right-click) -----
     function deleteNoteAtMouse(e) {
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
@@ -500,17 +331,12 @@
       const mouseX = (e.clientX - rect.left) * scaleX;
       const mouseY = (e.clientY - rect.top) * scaleY;
       
-      // find closest note within 20px
       let closest = -1;
-      let minDist = 25;
+      let minDist = 30;
       notes.forEach((note, index) => {
+        const y = getYFromPitch(note.pitch, note.octave);
         const dx = note.x - mouseX;
-        const pitchOffsets = { 'C': 0, 'C#': 1, 'D': 2, 'D#': 3, 'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11 };
-        let semitone = pitchOffsets[note.pitch] + (note.octave - 4) * 12;
-        const step = 8;
-        const c4y = 60 + 16 + 2;
-        const noteY = c4y - semitone * step;
-        const dy = noteY - mouseY;
+        const dy = y - mouseY;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist < minDist) {
           minDist = dist;
@@ -519,27 +345,127 @@
       });
       if (closest !== -1) {
         notes.splice(closest, 1);
-        updateNoteCount();
+        selectedNotes.delete(closest);
+        // Rebuild selected indices
+        const newSelected = new Set();
+        selectedNotes.forEach(idx => {
+          if (idx > closest) newSelected.add(idx - 1);
+          else if (idx < closest) newSelected.add(idx);
+        });
+        selectedNotes = newSelected;
         drawScore();
       }
     }
 
-    // ----- canvas events -----
-    canvas.addEventListener('click', addNoteAtMouse);
+    // ----- Selection (shift+click) -----
+    function selectNoteAtMouse(e) {
+      if (!e.shiftKey) return;
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const mouseX = (e.clientX - rect.left) * scaleX;
+      const mouseY = (e.clientY - rect.top) * scaleY;
+      
+      let closest = -1;
+      let minDist = 30;
+      notes.forEach((note, index) => {
+        const y = getYFromPitch(note.pitch, note.octave);
+        const dx = note.x - mouseX;
+        const dy = y - mouseY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < minDist) {
+          minDist = dist;
+          closest = index;
+        }
+      });
+      if (closest !== -1) {
+        if (selectedNotes.has(closest)) selectedNotes.delete(closest);
+        else selectedNotes.add(closest);
+        drawScore();
+      }
+    }
+
+    // ----- Apply articulation to selected -----
+    function applyArticulationToSelected(art) {
+      if (selectedNotes.size === 0) return;
+      selectedNotes.forEach(idx => {
+        if (notes[idx]) notes[idx].articulation = art;
+      });
+      drawScore();
+    }
+
+    // ----- Canvas events -----
+    canvas.addEventListener('click', (e) => {
+      if (e.shiftKey) {
+        selectNoteAtMouse(e);
+      } else {
+        // Deselect all if clicking on empty space
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
+        let clickedNote = false;
+        for (let note of notes) {
+          const y = getYFromPitch(note.pitch, note.octave);
+          if (Math.abs(note.x - mouseX) < 15 && Math.abs(y - mouseY) < 15) {
+            clickedNote = true;
+            break;
+          }
+        }
+        if (!clickedNote) {
+          selectedNotes.clear();
+          drawScore();
+        }
+        addNoteAtMouse(e);
+      }
+    });
     canvas.addEventListener('contextmenu', deleteNoteAtMouse);
 
-    // ----- toolbar: duration -----
+    // ----- Keyboard shortcuts -----
+    document.addEventListener('keydown', (e) => {
+      const key = e.key;
+      if (key === '1') { setDuration('whole', durWhole); e.preventDefault(); }
+      else if (key === '2') { setDuration('half', durHalf); e.preventDefault(); }
+      else if (key === '3') { setDuration('quarter', durQuarter); e.preventDefault(); }
+      else if (key === '4') { setDuration('eighth', durEighth); e.preventDefault(); }
+      else if (key === '5') { setDuration('sixteenth', durSixteenth); e.preventDefault(); }
+      else if (key === 's' || key === 'S') { currentArticulation = 'staccato'; applyArticulationToSelected('staccato'); e.preventDefault(); }
+      else if (key === 'a' || key === 'A') { currentArticulation = 'accent'; applyArticulationToSelected('accent'); e.preventDefault(); }
+      else if (key === 't' || key === 'T') { currentArticulation = 'tenuto'; applyArticulationToSelected('tenuto'); e.preventDefault(); }
+      else if (key === 'n' || key === 'N') { currentArticulation = null; applyArticulationToSelected(null); e.preventDefault(); }
+      else if (key === 'Delete' || key === 'Backspace') {
+        if (selectedNotes.size > 0) {
+          const sorted = Array.from(selectedNotes).sort((a,b) => b - a);
+          sorted.forEach(idx => notes.splice(idx, 1));
+          selectedNotes.clear();
+          drawScore();
+          e.preventDefault();
+        }
+      }
+    });
+
+    // ----- Duration setter -----
     function setDuration(dur, activeBtn) {
       currentDuration = dur;
-      [durQuarter, durHalf, durWhole].forEach(b => b.classList.remove('active'));
+      [durWhole, durHalf, durQuarter, durEighth, durSixteenth].forEach(b => b.classList.remove('active'));
       activeBtn.classList.add('active');
     }
 
-    durQuarter.addEventListener('click', () => setDuration('quarter', durQuarter));
-    durHalf.addEventListener('click', () => setDuration('half', durHalf));
     durWhole.addEventListener('click', () => setDuration('whole', durWhole));
+    durHalf.addEventListener('click', () => setDuration('half', durHalf));
+    durQuarter.addEventListener('click', () => setDuration('quarter', durQuarter));
+    durEighth.addEventListener('click', () => setDuration('eighth', durEighth));
+    durSixteenth.addEventListener('click', () => setDuration('sixteenth', durSixteenth));
 
-    // octave controls (only for display, but we use mouse for pitch)
+    // Articulation buttons
+    artStaccato.addEventListener('click', () => { currentArticulation = 'staccato'; applyArticulationToSelected('staccato'); });
+    artAccent.addEventListener('click', () => { currentArticulation = 'accent'; applyArticulationToSelected('accent'); });
+    artTenuto.addEventListener('click', () => { currentArticulation = 'tenuto'; applyArticulationToSelected('tenuto'); });
+    artNone.addEventListener('click', () => { currentArticulation = null; applyArticulationToSelected(null); });
+
+    // Octave controls
     document.getElementById('octaveUp').addEventListener('click', () => {
       if (currentOctave < 7) currentOctave++;
       octaveDisplay.textContent = currentOctave;
@@ -549,20 +475,19 @@
       octaveDisplay.textContent = currentOctave;
     });
 
-    // clear
+    // Clear
     document.getElementById('clearBtn').addEventListener('click', () => {
       notes = [];
-      updateNoteCount();
+      selectedNotes.clear();
       drawScore();
     });
-
     document.getElementById('newScoreBtn').addEventListener('click', () => {
       notes = [];
-      updateNoteCount();
+      selectedNotes.clear();
       drawScore();
     });
 
-    // export
+    // Export
     document.getElementById('exportBtn').addEventListener('click', () => {
       const data = JSON.stringify(notes, null, 2);
       const blob = new Blob([data], {type: 'application/json'});
@@ -574,7 +499,7 @@
       URL.revokeObjectURL(url);
     });
 
-    // ----- playback -----
+    // ----- Playback -----
     let audioCtx = null;
     let isPlaying = false;
 
@@ -597,35 +522,28 @@
 
     document.getElementById('playBtn').addEventListener('click', () => {
       if (isPlaying) return;
-      if (notes.length === 0) {
-        alert('Add some notes first!');
-        return;
-      }
+      if (notes.length === 0) { alert('Add some notes first!'); return; }
       isPlaying = true;
       const playBtn = document.getElementById('playBtn');
       playBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
       
       const sorted = [...notes].sort((a,b) => a.x - b.x);
       let delay = 0;
-      const step = 0.32;
-
+      const step = 0.3;
       sorted.forEach((note) => {
-        const dur = note.duration === 'whole' ? 0.8 : note.duration === 'half' ? 0.55 : 0.35;
-        setTimeout(() => {
-          playNote(note.pitch, note.octave, dur);
-        }, delay * 1000);
+        const durMap = { 'whole': 0.8, 'half': 0.55, 'quarter': 0.35, 'eighth': 0.2, 'sixteenth': 0.12 };
+        const dur = durMap[note.duration] || 0.35;
+        setTimeout(() => { playNote(note.pitch, note.octave, dur); }, delay * 1000);
         delay += step;
       });
-
       setTimeout(() => {
         isPlaying = false;
         playBtn.innerHTML = '<i class="fas fa-play"></i>';
       }, (delay + 0.3) * 1000);
     });
 
-    // initial draw
+    // Initial draw with some example notes
     drawScore();
-    updateNoteCount();
   })();
 </script>
 </body>
