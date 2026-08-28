@@ -1,718 +1,655 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SheetCompose · Pure Sheet Music</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!-- ABCJS for sheet music rendering and playback -->
-  <script src="https://cdn.jsdelivr.net/npm/abcjs@6.2.3/dist/abcjs-basic-min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>♭·io · sheet music composer</title>
+  <!-- Font Awesome for clean icons (optional but adds flat.io feel) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body {
-      background: #f3efe9;
+      background: #f5f7fb;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding: 1.5rem;
+      padding: 20px;
     }
 
-    .app {
-      max-width: 1300px;
+    /* main card – exactly like flat.io minimalistic UI */
+    .flat-card {
+      max-width: 1100px;
       width: 100%;
-      background: #ffffff;
-      border-radius: 2.5rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-      padding: 2rem 2rem 2.5rem;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      margin-bottom: 0.5rem;
-    }
-
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      color: #1e1b1a;
-    }
-    h1 i {
-      color: #c44536;
-    }
-
-    .subhead {
-      color: #5f5b58;
-      border-left: 4px solid #c44536;
-      padding-left: 1rem;
-      font-weight: 400;
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .subhead span {
-      background: #f0ebe6;
-      padding: 0.2rem 1rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-    }
-
-    .grid-2col {
-      display: grid;
-      grid-template-columns: 1fr 2.2fr;
-      gap: 2rem;
-      margin-top: 1.5rem;
-    }
-
-    @media (max-width: 860px) {
-      .grid-2col {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* ---------- LEFT PANEL ---------- */
-    .panel-left {
-      background: #faf8f6;
-      border-radius: 1.8rem;
-      padding: 1.5rem;
-      border: 1px solid #ede8e2;
-    }
-
-    .panel-left h3 {
-      font-weight: 600;
-      font-size: 1rem;
-      color: #2d2a27;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 1.2rem;
-      letter-spacing: -0.01em;
-    }
-
-    .instrument-group {
-      margin-bottom: 1.8rem;
-    }
-    .instrument-group label {
-      display: block;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #6b6560;
-      margin-bottom: 0.5rem;
-    }
-
-    .inst-selector {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-    .inst-btn {
       background: white;
-      border: 1px solid #ddd8d2;
-      padding: 0.4rem 1rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex: 1 0 auto;
-      justify-content: center;
-    }
-    .inst-btn.active {
-      background: #1e1b1a;
-      border-color: #1e1b1a;
-      color: white;
-    }
-    .inst-btn:hover:not(.active) {
-      background: #f0ebe6;
+      border-radius: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.04);
+      padding: 30px 35px 40px;
+      transition: all 0.2s ease;
     }
 
-    .articulation-group {
-      margin-top: 0.5rem;
-    }
-    .articulation-group label {
-      display: block;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #6b6560;
-      margin-bottom: 0.5rem;
-    }
-    .art-badge {
-      display: inline-block;
-      background: white;
-      border: 1px solid #ddd8d2;
-      padding: 0.3rem 1.2rem;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.1s;
-      margin: 0.15rem 0.15rem 0.15rem 0;
-    }
-    .art-badge.active {
-      background: #c44536;
-      border-color: #c44536;
-      color: white;
-    }
-    .art-badge:hover:not(.active) {
-      background: #f0ebe6;
-    }
-
-    .action-bar {
-      margin-top: 2rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-      border-top: 1px solid #e5ded7;
-      padding-top: 1.5rem;
-    }
-    .btn-primary {
-      background: #1e1b1a;
-      border: none;
-      color: white;
-      padding: 0.6rem 1.6rem;
-      border-radius: 60px;
-      font-weight: 500;
-      font-size: 0.85rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-    .btn-primary:hover {
-      background: #3d2f2b;
-      transform: scale(0.97);
-    }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #c5bdb5;
-      color: #3d3a37;
-      padding: 0.6rem 1.6rem;
-      border-radius: 60px;
-      font-weight: 500;
-      font-size: 0.85rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-    .btn-outline:hover {
-      background: #f0ebe6;
-    }
-    .status-badge {
-      margin-left: auto;
-      font-size: 0.7rem;
-      background: #e8e0d9;
-      padding: 0.2rem 1.2rem;
-      border-radius: 30px;
-      color: #3d3a37;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    /* ---------- RIGHT PANEL: SHEET MUSIC ---------- */
-    .panel-right {
-      background: #fcfaf8;
-      border-radius: 1.8rem;
-      padding: 1.5rem 1.5rem 1.8rem;
-      border: 1px solid #ede8e2;
-    }
-
-    .player-header {
+    /* header with flat.io style */
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.2rem;
-    }
-    .player-header h3 {
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: #2d2a27;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
-    .play-btn {
-      background: #c44536;
-      border: none;
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      background: #1e2b3c;
       color: white;
       width: 44px;
       height: 44px;
-      border-radius: 60px;
-      font-size: 1.3rem;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 600;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: #1e2b3c;
+    }
+
+    .logo-text span {
+      color: #6c7a8a;
+      font-weight: 400;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      background: transparent;
+      border: 1px solid #e2e8f0;
+      padding: 10px 18px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 14px;
+      color: #1e2b3c;
       cursor: pointer;
-      transition: 0.15s;
-      box-shadow: 0 4px 10px rgba(196, 69, 54, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+      background: white;
+    }
+
+    .btn-primary {
+      background: #1e2b3c;
+      border: 1px solid #1e2b3c;
+      color: white;
+    }
+
+    .btn-primary i {
+      color: white;
+    }
+
+    .btn:hover {
+      background: #f1f4f9;
+      border-color: #cbd5e1;
+    }
+
+    .btn-primary:hover {
+      background: #2c3d52;
+      border-color: #2c3d52;
+    }
+
+    /* main score area – exactly like flat.io minimal stave */
+    .score-container {
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.02), 0 4px 16px rgba(0,0,0,0.02);
+      padding: 20px 10px 10px 10px;
+      margin-bottom: 20px;
+      border: 1px solid #edf2f7;
+    }
+
+    #musicCanvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: white;
+      border-radius: 16px;
+      cursor: pointer;
+      touch-action: none; /* better for mobile */
+    }
+
+    /* tool bar – like flat.io editing tools */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 14px;
+      margin: 18px 0 12px 0;
+      padding: 6px 4px;
+      border-top: 1px solid #ecf1f7;
+      border-bottom: 1px solid #ecf1f7;
+      padding: 14px 0;
+    }
+
+    .tool-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .tool-group-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #5e6f7e;
+      letter-spacing: 0.3px;
+      margin-right: 4px;
+    }
+
+    .tool-btn {
+      background: transparent;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-    }
-    .play-btn:hover {
-      background: #a8372a;
-      transform: scale(0.95);
-    }
-    .play-btn.playing {
-      background: #3d3a37;
-    }
-
-    /* Sheet music container */
-    #sheetContainer {
+      font-size: 18px;
+      color: #1f2a36;
       background: white;
-      border-radius: 1.2rem;
-      padding: 1.2rem 0.5rem 0.8rem 0.5rem;
-      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
-      border: 1px solid #e8e0d9;
-      min-height: 200px;
-      overflow-x: auto;
-    }
-    #sheetContainer svg {
-      width: 100% !important;
-      height: auto !important;
+      border: 1px solid transparent;
+      transition: 0.1s;
+      cursor: pointer;
     }
 
-    /* Note input controls */
-    .note-input-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 1.2rem;
-      align-items: center;
-      background: #f4f0eb;
-      padding: 0.6rem 1rem;
-      border-radius: 60px;
+    .tool-btn i {
+      font-size: 18px;
+      color: #2c3d4f;
     }
-    .note-input-bar label {
-      font-size: 0.75rem;
+
+    .tool-btn.active {
+      background: #eef3fa;
+      border-color: #cbdae9;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+    }
+
+    .tool-btn:hover {
+      background: #f0f4fc;
+      border-color: #d0ddee;
+    }
+
+    .tool-btn.note-btn {
       font-weight: 600;
-      color: #4d4843;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .note-input-bar select,
-    .note-input-bar input[type="number"] {
-      background: white;
-      border: 1px solid #d5cdc4;
-      border-radius: 30px;
-      padding: 0.25rem 0.8rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #1e1b1a;
-      outline: none;
-    }
-    .note-input-bar select:focus,
-    .note-input-bar input:focus {
-      border-color: #c44536;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      color: #1f2a36;
     }
 
-    .add-note-btn {
-      background: #1e1b1a;
+    .separator {
+      width: 1px;
+      height: 28px;
+      background: #e2eaf3;
+      margin: 0 6px;
+    }
+
+    /* playback & info */
+    .playback-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .play-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .play-btn {
+      background: #1e2b3c;
       border: none;
       color: white;
-      padding: 0.3rem 1.4rem;
+      width: 48px;
+      height: 48px;
       border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 500;
+      font-size: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       transition: 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-left: auto;
-    }
-    .add-note-btn:hover {
-      background: #3d2f2b;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.02);
     }
 
-    .footer-note {
-      margin-top: 1.5rem;
-      font-size: 0.7rem;
-      color: #8f8982;
-      text-align: center;
-      border-top: 1px solid #ede8e2;
-      padding-top: 1.2rem;
+    .play-btn:hover {
+      background: #2d3f53;
+      transform: scale(1.02);
     }
-    .footer-note i {
-      margin: 0 4px;
-    }
-    .public-badge-sm {
-      background: #1e1b1a;
-      color: white;
-      padding: 0.1rem 1rem;
+
+    .status {
+      color: #4b5e6f;
+      font-size: 14px;
+      font-weight: 450;
+      background: #f0f5fc;
+      padding: 6px 18px;
       border-radius: 40px;
-      font-size: 0.65rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status i {
+      color: #3b7c5c;
+    }
+
+    .clear-btn {
+      background: transparent;
+      border: 1px solid #e2e8f0;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-size: 13px;
       font-weight: 500;
+      color: #4d6072;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .clear-btn:hover {
+      background: #f8faff;
+      border-color: #bcccdb;
+    }
+
+    /* responsive */
+    @media (max-width: 680px) {
+      .flat-card {
+        padding: 20px;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .action-buttons {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .toolbar {
+        gap: 12px;
+      }
+    }
+
+    /* note badge */
+    .note-badge {
+      background: #eaf1fb;
+      border-radius: 30px;
+      padding: 4px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1e2b3c;
     }
   </style>
 </head>
 <body>
-<div class="app">
-  <header>
+
+<div class="flat-card">
+  <!-- header: flat.io style -->
+  <div class="header">
+    <div class="logo-area">
+      <div class="logo-icon">♭</div>
+      <div class="logo-text">flat<span>·io</span></div>
+    </div>
+    <div class="action-buttons">
+      <button class="btn" id="exportBtn"><i class="fas fa-download"></i> Export</button>
+      <button class="btn btn-primary" id="newScoreBtn"><i class="fas fa-plus"></i> New score</button>
+    </div>
+  </div>
+
+  <!-- score canvas -->
+  <div class="score-container">
+    <canvas id="musicCanvas" width="1000" height="200"></canvas>
+  </div>
+
+  <!-- toolbar – exactly like flat.io -->
+  <div class="toolbar">
+    <div class="tool-group">
+      <span class="tool-group-label"><i class="fas fa-pen"></i> Note</span>
+      <button class="tool-btn note-btn active" data-note="C">C</button>
+      <button class="tool-btn note-btn" data-note="D">D</button>
+      <button class="tool-btn note-btn" data-note="E">E</button>
+      <button class="tool-btn note-btn" data-note="F">F</button>
+      <button class="tool-btn note-btn" data-note="G">G</button>
+      <button class="tool-btn note-btn" data-note="A">A</button>
+      <button class="tool-btn note-btn" data-note="B">B</button>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="tool-group">
+      <span class="tool-group-label"><i class="fas fa-arrow-up"></i> Octave</span>
+      <button class="tool-btn" id="octaveDown"><i class="fas fa-minus"></i></button>
+      <span class="note-badge" id="octaveDisplay">4</span>
+      <button class="tool-btn" id="octaveUp"><i class="fas fa-plus"></i></button>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="tool-group">
+      <span class="tool-group-label"><i class="fas fa-music"></i> Duration</span>
+      <button class="tool-btn active" id="durQuarter"><i class="fas fa-circle"></i></button>
+      <button class="tool-btn" id="durHalf"><i class="far fa-circle"></i></button>
+      <button class="tool-btn" id="durWhole"><i class="far fa-circle" style="border:2px solid #1f2a36; border-radius:50%; padding:2px;"></i></button>
+    </div>
+  </div>
+
+  <!-- playback & status -->
+  <div class="playback-bar">
+    <div class="play-controls">
+      <button class="play-btn" id="playBtn"><i class="fas fa-play"></i></button>
+      <span class="status"><i class="fas fa-check-circle"></i> <span id="noteCount">0</span> notes</span>
+    </div>
     <div>
-      <h1><i class="fas fa-music"></i> SheetCompose</h1>
-      <div class="subhead">
-        <span><i class="fas fa-pen-fancy"></i> Pure sheet music</span>
-        <span><i class="far fa-clock"></i> 4/4 · C major</span>
-      </div>
-    </div>
-  </header>
-
-  <div class="grid-2col">
-    <!-- LEFT PANEL -->
-    <div class="panel-left">
-      <h3><i class="fas fa-sliders-h"></i> Instrument</h3>
-      <div class="instrument-group">
-        <label>Choose sound</label>
-        <div class="inst-selector" id="instrumentSelector">
-          <button class="inst-btn active" data-instrument="piano"><i class="fas fa-piano"></i> Piano</button>
-          <button class="inst-btn" data-instrument="guitar"><i class="fas fa-guitar"></i> Guitar</button>
-          <button class="inst-btn" data-instrument="violin"><i class="fas fa-violin"></i> Violin</button>
-          <button class="inst-btn" data-instrument="flute"><i class="fas fa-flute"></i> Flute</button>
-        </div>
-      </div>
-
-      <div class="articulation-group">
-        <label><i class="fas fa-flag"></i> Articulation</label>
-        <div id="articulationContainer">
-          <span class="art-badge active" data-articulation="legato">legato</span>
-          <span class="art-badge" data-articulation="staccato">staccato</span>
-          <span class="art-badge" data-articulation="marcato">marcato</span>
-          <span class="art-badge" data-articulation="pizzicato">pizzicato</span>
-        </div>
-      </div>
-
-      <div class="action-bar">
-        <button class="btn-primary" id="saveBtn"><i class="fas fa-save"></i> Save</button>
-        <button class="btn-outline" id="postBtn"><i class="fas fa-globe"></i> Post</button>
-        <span class="status-badge" id="statusBadge"><i class="fas fa-check-circle" style="color:#2b7a4b;"></i> draft</span>
-      </div>
-      <div style="margin-top:0.5rem; font-size:0.7rem; color:#7b736b; display:flex; gap:1.2rem;">
-        <span><i class="far fa-save"></i> auto-save</span>
-        <span><i class="fas fa-user-friends"></i> public view</span>
-      </div>
-    </div>
-
-    <!-- RIGHT PANEL: SHEET MUSIC -->
-    <div class="panel-right">
-      <div class="player-header">
-        <h3><i class="fas fa-score"></i> Sheet Music</h3>
-        <button class="play-btn" id="playBtn"><i class="fas fa-play"></i></button>
-      </div>
-
-      <!-- Sheet music renders here -->
-      <div id="sheetContainer"></div>
-
-      <!-- Note input: add notes to the sheet -->
-      <div class="note-input-bar">
-        <label><i class="fas fa-note-sticky"></i> Add note</label>
-        <select id="noteSelect">
-          <option value="C4">C4</option><option value="D4">D4</option><option value="E4">E4</option>
-          <option value="F4">F4</option><option value="G4">G4</option><option value="A4">A4</option>
-          <option value="B4">B4</option><option value="C5">C5</option>
-        </select>
-        <select id="durationSelect">
-          <option value="4">Quarter</option>
-          <option value="8">Eighth</option>
-          <option value="2">Half</option>
-          <option value="1">Whole</option>
-        </select>
-        <button class="add-note-btn" id="addNoteBtn"><i class="fas fa-plus"></i> Add</button>
-        <button class="add-note-btn" id="clearBtn" style="background:#6b6560;"><i class="fas fa-trash"></i> Clear</button>
-      </div>
-
-      <div class="footer-note">
-        <span class="public-badge-sm"><i class="fas fa-eye"></i> public</span>
-        <span style="margin-left:1rem;"><i class="fas fa-edit"></i> click "Add" to place notes · press play to hear</span>
-      </div>
+      <button class="clear-btn" id="clearBtn"><i class="fas fa-eraser"></i> Clear all</button>
     </div>
   </div>
 </div>
 
 <script>
   (function() {
-    // ----- STATE -----
-    const state = {
-      instrument: 'piano',
-      articulation: 'legato',
-      // ABC notation stores the melody as a string
-      abcTune: '',
-      // We'll store notes as an array of { pitch, duration }
-      notes: [],
-    };
+    // ----- flat.io style composer -----
+    const canvas = document.getElementById('musicCanvas');
+    const ctx = canvas.getContext('2d');
 
-    // DOM refs
-    const sheetContainer = document.getElementById('sheetContainer');
-    const playBtn = document.getElementById('playBtn');
-    const statusBadge = document.getElementById('statusBadge');
-    const noteSelect = document.getElementById('noteSelect');
-    const durationSelect = document.getElementById('durationSelect');
-    const addNoteBtn = document.getElementById('addNoteBtn');
-    const clearBtn = document.getElementById('clearBtn');
+    // state
+    let notes = [];             // [{pitch: 'C', octave: 4, duration: 'quarter', x: number}]
+    let selectedNote = 'C';
+    let currentOctave = 4;
+    let currentDuration = 'quarter';
 
-    // Instrument & Articulation buttons
-    const instBtns = document.querySelectorAll('.inst-btn');
-    const artBadges = document.querySelectorAll('.art-badge');
+    // UI elements
+    const noteBtns = document.querySelectorAll('.note-btn');
+    const octaveDisplay = document.getElementById('octaveDisplay');
+    const noteCountSpan = document.getElementById('noteCount');
 
-    // ----- ABC rendering -----
-    function renderSheet() {
-      // Build ABC string from notes
-      let abcBody = '';
-      if (state.notes.length === 0) {
-        // Empty measure (rest)
-        abcBody = 'z4 |';
-      } else {
-        // Group notes into measures of 4 beats (simple)
-        let currentMeasure = [];
-        let measureDuration = 0;
-        const measures = [];
+    // duration buttons
+    const durQuarter = document.getElementById('durQuarter');
+    const durHalf = document.getElementById('durHalf');
+    const durWhole = document.getElementById('durWhole');
 
-        state.notes.forEach(n => {
-          const dur = parseInt(n.duration);
-          if (measureDuration + dur > 4) {
-            // close measure
-            if (currentMeasure.length) measures.push(currentMeasure.join(' '));
-            currentMeasure = [];
-            measureDuration = 0;
-          }
-          // articulation symbol (simplified)
-          let art = '';
-          if (state.articulation === 'staccato') art = '.';
-          else if (state.articulation === 'marcato') art = '^';
-          else if (state.articulation === 'pizzicato') art = 'pizz.';
-          // pitch + duration
-          let noteStr = n.pitch;
-          if (dur === 8) noteStr += '/';
-          else if (dur === 2) noteStr += '2';
-          else if (dur === 1) noteStr += '1';
-          else noteStr += '4'; // quarter default
-          if (art) noteStr = art + noteStr;
-          currentMeasure.push(noteStr);
-          measureDuration += dur;
-        });
-        if (currentMeasure.length) measures.push(currentMeasure.join(' '));
-        // fill last measure if needed
-        abcBody = measures.join(' | ') + ' |';
-      }
-
-      const abc = `X:1\nT:Composition\nM:4/4\nL:1/8\nK:C\n${abcBody}`;
-      state.abcTune = abc;
-
-      // Render with abcjs
-      try {
-        sheetContainer.innerHTML = '';
-        ABCJS.renderAbc(sheetContainer, abc, {
-          responsive: 'resize',
-          scale: 1.2,
-          staffwidth: 580,
-        });
-      } catch (e) {
-        sheetContainer.innerHTML = `<p style="color:#b85a4b; padding:1rem;">⚠️ Could not render sheet: ${e.message}</p>`;
-      }
+    // helpers
+    function updateNoteCount() {
+      noteCountSpan.textContent = notes.length;
     }
 
-    // ----- Playback using ABCJS -----
-    let isPlaying = false;
-    let audioCtx = null;
+    // ----- drawing (flat.io minimal stave) -----
+    function drawScore() {
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
 
-    function playTune() {
-      if (isPlaying) {
-        stopPlayback();
-        return;
-      }
-      if (state.notes.length === 0) {
-        statusBadge.innerHTML = `<i class="fas fa-exclamation-circle" style="color:#b85a4b;"></i> no notes`;
-        setTimeout(() => updateStatusDraft(), 1200);
-        return;
+      // background
+      ctx.fillStyle = '#fbfdff';
+      ctx.fillRect(0, 0, w, h);
+
+      // five staff lines (grand staff style, but we draw 5 lines)
+      const lineSpacing = 16;
+      const startY = 60;    // top line y
+      ctx.strokeStyle = '#2f3e4e';
+      ctx.lineWidth = 1.5;
+
+      // draw 5 lines
+      for (let i = 0; i < 5; i++) {
+        const y = startY + i * lineSpacing;
+        ctx.beginPath();
+        ctx.moveTo(20, y);
+        ctx.lineTo(w - 20, y);
+        ctx.stroke();
       }
 
-      // Use ABCJS synth
-      try {
-        const visualObj = ABCJS.renderAbc(sheetContainer, state.abcTune, { responsive: 'resize', scale: 1.2 });
-        if (visualObj && visualObj[0]) {
-          // Create synth
-          if (!audioCtx) {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // left clef (treble)
+      ctx.font = '44px "Times New Roman", serif';
+      ctx.fillStyle = '#1f2a36';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('𝄞', 42, startY + 2 * lineSpacing + 2);
+
+      // draw notes
+      const noteWidth = 18;
+      const noteHeight = 14;
+
+      notes.forEach((note, index) => {
+        const pitch = note.pitch;
+        const octave = note.octave;
+        const dur = note.duration || 'quarter';
+        const x = note.x || (60 + index * 38);  // fallback
+
+        // map pitch to line/space (C4 = middle C = below staff, we set C4 at space below first line)
+        // we map: C4 → y offset 0 (below staff), D4 → +2, E4 → +4, F4 → +6, G4 → +8, A4 → +10, B4 → +12
+        const pitchOffsets = { 'C': 0, 'D': 2, 'E': 4, 'F': 6, 'G': 8, 'A': 10, 'B': 12 };
+        let offset = pitchOffsets[pitch] || 0;
+        // octave shift: each octave = 7 steps * 8px (step = 8px)
+        const octaveShift = (octave - 4) * 7 * 8;
+        const baseY = startY + 2 * lineSpacing - 4; // center around staff
+        const yPos = baseY + offset * 4 + octaveShift; 
+
+        // draw notehead
+        ctx.beginPath();
+        ctx.ellipse(x, yPos, 8, 6, 0, 0, Math.PI * 2);
+        ctx.fillStyle = '#1e2b3c';
+        ctx.fill();
+        ctx.strokeStyle = '#1e2b3c';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // stem (if not whole note)
+        if (dur !== 'whole') {
+          ctx.beginPath();
+          ctx.moveTo(x + 8, yPos - 2);
+          ctx.lineTo(x + 8, yPos - 32);
+          ctx.stroke();
+
+          // flag (if quarter)
+          if (dur === 'quarter') {
+            ctx.beginPath();
+            ctx.moveTo(x + 8, yPos - 32);
+            ctx.quadraticCurveTo(x + 20, yPos - 26, x + 16, yPos - 16);
+            ctx.stroke();
           }
-          const synth = new ABCJS.synth.Synth();
-          // We need to pass the visualObj and options
-          synth.init({
-            visualObj: visualObj,
-            audioContext: audioCtx,
-            options: { 
-              instrument: state.instrument || 'piano',
-              // articulation is handled via the notation itself
-            }
-          }).then(() => {
-            isPlaying = true;
-            playBtn.innerHTML = '<i class="fas fa-stop"></i>';
-            playBtn.classList.add('playing');
-            statusBadge.innerHTML = `<i class="fas fa-play" style="color:#c44536;"></i> playing`;
-            synth.play();
-            // When done, reset
-            synth.on('finished', () => {
-              stopPlayback();
-            });
-          }).catch(err => {
-            console.warn('Playback error:', err);
-            statusBadge.innerHTML = `<i class="fas fa-exclamation-circle" style="color:#b85a4b;"></i> playback error`;
-            setTimeout(updateStatusDraft, 1500);
-          });
         }
-      } catch (e) {
-        console.warn('ABC play error:', e);
+
+        // accidental? no, just pitch name above (flat.io style)
+        ctx.font = '12px Inter, sans-serif';
+        ctx.fillStyle = '#3c4d5e';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(pitch + octave, x, yPos - 36);
+      });
+
+      // ledger lines if needed – we skip for simplicity, but we add a small indicator
+      // draw a subtle grid (flat.io minimal)
+      ctx.strokeStyle = '#e9eef6';
+      ctx.lineWidth = 0.8;
+      for (let i = 0; i < 12; i++) {
+        const y = startY + i * 8;
+        ctx.beginPath();
+        ctx.moveTo(30, y);
+        ctx.lineTo(w-30, y);
+        ctx.stroke();
       }
     }
 
-    function stopPlayback() {
-      isPlaying = false;
-      playBtn.innerHTML = '<i class="fas fa-play"></i>';
-      playBtn.classList.remove('playing');
-      updateStatusDraft();
-      // Try to stop synth (hacky but works)
-      try {
-        const synth = ABCJS.synth.Synth.getCurrentSynth();
-        if (synth) synth.stop();
-      } catch(e) {}
+    // add note with current settings at a given x (or auto)
+    function addNoteAtX(x) {
+      const pitch = selectedNote;
+      const octave = currentOctave;
+      const duration = currentDuration;
+      // avoid overlapping exactly
+      const newNote = { pitch, octave, duration, x: Math.min(Math.max(x, 40), canvas.width - 40) };
+      notes.push(newNote);
+      updateNoteCount();
+      drawScore();
     }
 
-    // ----- Helpers -----
-    function updateStatusDraft() {
-      statusBadge.innerHTML = `<i class="fas fa-check-circle" style="color:#2b7a4b;"></i> draft`;
-    }
-
-    function addNote(pitch, duration) {
-      state.notes.push({ pitch, duration: String(duration) });
-      renderSheet();
-      updateStatusDraft();
-    }
-
-    function clearNotes() {
-      state.notes = [];
-      renderSheet();
-      updateStatusDraft();
-      statusBadge.innerHTML = `<i class="fas fa-eraser"></i> cleared`;
-      setTimeout(updateStatusDraft, 1000);
-    }
-
-    // ----- Save & Post -----
-    function saveComposition() {
-      if (state.notes.length === 0) {
-        statusBadge.innerHTML = `<i class="fas fa-exclamation-circle" style="color:#b85a4b;"></i> nothing to save`;
-        setTimeout(updateStatusDraft, 1500);
-        return;
+    // ----- event listeners for canvas click (add note) -----
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const mouseX = (e.clientX - rect.left) * scaleX;
+      if (mouseX > 30 && mouseX < canvas.width - 30) {
+        addNoteAtX(mouseX);
       }
-      statusBadge.innerHTML = `<i class="fas fa-check-circle" style="color:#2b7a4b;"></i> saved ✓`;
-      setTimeout(updateStatusDraft, 2000);
-    }
+    });
 
-    function postComposition() {
-      if (state.notes.length === 0) {
-        statusBadge.innerHTML = `<i class="fas fa-exclamation-circle" style="color:#b85a4b;"></i> add notes first`;
-        setTimeout(updateStatusDraft, 1500);
-        return;
-      }
-      statusBadge.innerHTML = `<i class="fas fa-globe" style="color:#1e6f5c;"></i> posted public!`;
-      setTimeout(() => {
-        statusBadge.innerHTML = `<i class="fas fa-check-circle" style="color:#2b7a4b;"></i> public`;
-      }, 2000);
-    }
-
-    // ----- Event bindings -----
-    // Instrument
-    instBtns.forEach(btn => {
+    // ----- toolbar note selection -----
+    noteBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        if (isPlaying) return;
-        state.instrument = btn.dataset.instrument;
-        instBtns.forEach(b => b.classList.remove('active'));
+        noteBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        selectedNote = btn.dataset.note;
       });
     });
 
-    // Articulation
-    artBadges.forEach(badge => {
-      badge.addEventListener('click', () => {
-        if (isPlaying) return;
-        state.articulation = badge.dataset.articulation;
-        artBadges.forEach(b => b.classList.remove('active'));
-        badge.classList.add('active');
-        renderSheet(); // re-render with new articulation
-      });
+    // octave controls
+    document.getElementById('octaveUp').addEventListener('click', () => {
+      if (currentOctave < 7) currentOctave++;
+      octaveDisplay.textContent = currentOctave;
+    });
+    document.getElementById('octaveDown').addEventListener('click', () => {
+      if (currentOctave > 2) currentOctave--;
+      octaveDisplay.textContent = currentOctave;
     });
 
-    // Play
-    playBtn.addEventListener('click', playTune);
-
-    // Add note
-    addNoteBtn.addEventListener('click', () => {
-      if (isPlaying) return;
-      const pitch = noteSelect.value;
-      const duration = parseInt(durationSelect.value);
-      addNote(pitch, duration);
-    });
-
-    // Clear
-    clearBtn.addEventListener('click', () => {
-      if (isPlaying) return;
-      clearNotes();
-    });
-
-    // Save & Post
-    document.getElementById('saveBtn').addEventListener('click', saveComposition);
-    document.getElementById('postBtn').addEventListener('click', postComposition);
-
-    // Keyboard shortcut: Enter to add note
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'SELECT') {
-        addNoteBtn.click();
-      }
-    });
-
-    // Initial render with a demo melody (Twinkle Twinkle)
-    function loadDemo() {
-      const demo = [
-        { pitch: 'C4', duration: '4' }, { pitch: 'C4', duration: '4' }, { pitch: 'G4', duration: '4' }, { pitch: 'G4', duration: '4' },
-        { pitch: 'A4', duration: '4' }, { pitch: 'A4', duration: '4' }, { pitch: 'G4', duration: '2' },
-        { pitch: 'F4', duration: '4' }, { pitch: 'F4', duration: '4' }, { pitch: 'E4', duration: '4' }, { pitch: 'E4', duration: '4' },
-        { pitch: 'D4', duration: '4' }, { pitch: 'D4', duration: '4' }, { pitch: 'C4', duration: '2' },
-      ];
-      state.notes = demo;
-      renderSheet();
-      updateStatusDraft();
+    // duration buttons
+    function setDuration(dur, activeBtn) {
+      currentDuration = dur;
+      [durQuarter, durHalf, durWhole].forEach(b => b.classList.remove('active'));
+      activeBtn.classList.add('active');
     }
-    loadDemo();
 
-    // Cleanup playback on page unload
-    window.addEventListener('beforeunload', () => {
-      if (isPlaying) stopPlayback();
-      if (audioCtx && audioCtx.state !== 'closed') audioCtx.close();
+    durQuarter.addEventListener('click', () => setDuration('quarter', durQuarter));
+    durHalf.addEventListener('click', () => setDuration('half', durHalf));
+    durWhole.addEventListener('click', () => setDuration('whole', durWhole));
+
+    // clear all
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      notes = [];
+      updateNoteCount();
+      drawScore();
     });
 
+    // new score
+    document.getElementById('newScoreBtn').addEventListener('click', () => {
+      notes = [];
+      updateNoteCount();
+      drawScore();
+    });
+
+    // export (JSON + simple)
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const data = JSON.stringify(notes, null, 2);
+      const blob = new Blob([data], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'flat_score.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // ----- PLAYBACK (Web Audio) -----
+    let audioCtx = null;
+    let isPlaying = false;
+
+    function playNote(pitch, octave, durationSec = 0.35) {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const freq = getFrequency(pitch, octave);
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + durationSec);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + durationSec);
+    }
+
+    function getFrequency(pitch, octave) {
+      const base = { 'C': -9, 'D': -7, 'E': -5, 'F': -4, 'G': -2, 'A': 0, 'B': 2 };
+      const semitone = base[pitch] + (octave - 4) * 12;
+      return 440 * Math.pow(2, semitone / 12);
+    }
+
+    document.getElementById('playBtn').addEventListener('click', () => {
+      if (isPlaying) return;
+      if (notes.length === 0) {
+        alert('Add some notes first!');
+        return;
+      }
+      isPlaying = true;
+      const playBtn = document.getElementById('playBtn');
+      playBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i>';
+      
+      // sort by x position
+      const sorted = [...notes].sort((a,b) => a.x - b.x);
+      let delay = 0;
+      const step = 0.32; // seconds between notes
+
+      sorted.forEach((note, i) => {
+        const dur = note.duration === 'whole' ? 0.8 : note.duration === 'half' ? 0.55 : 0.35;
+        setTimeout(() => {
+          playNote(note.pitch, note.octave, dur);
+        }, delay * 1000);
+        delay += step;
+      });
+
+      setTimeout(() => {
+        isPlaying = false;
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+      }, (delay + 0.3) * 1000);
+    });
+
+    // initial draw
+    drawScore();
+    updateNoteCount();
+
+    // add some default notes to look like flat.io demo
+    setTimeout(() => {
+      notes = [
+        { pitch: 'C', octave: 4, duration: 'quarter', x: 120 },
+        { pitch: 'E', octave: 4, duration: 'quarter', x: 170 },
+        { pitch: 'G', octave: 4, duration: 'half', x: 220 },
+        { pitch: 'C', octave: 5, duration: 'quarter', x: 300 },
+        { pitch: 'B', octave: 4, duration: 'quarter', x: 350 },
+        { pitch: 'G', octave: 4, duration: 'whole', x: 420 },
+      ];
+      updateNoteCount();
+      drawScore();
+    }, 100);
   })();
 </script>
+
 </body>
 </html>
